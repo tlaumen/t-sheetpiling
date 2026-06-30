@@ -10,7 +10,7 @@ binary from src/main.c if you want a quick sanity check outside the browser.)
 
 ## Run
 
-    python3 bin/backend.py
+    uv run bin/backend.py
 
 Then open http://127.0.0.1:8765/ in a browser.
 
