@@ -1,4 +1,4 @@
-# T-sheetpiling - an interactive sheet pile solver
+# T-sheetpiling -- an interactive sheet pile solver
 
 ## Run
 
