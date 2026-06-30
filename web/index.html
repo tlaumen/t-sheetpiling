@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sheet pile solver</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Sheet pile solver</h1>
+    <nav>
+      <button class="tab-btn active" data-tab="input">Input</button>
+      <button class="tab-btn" data-tab="interact">Interact</button>
+    </nav>
+  </header>
+
+  <main id="tab-input" class="tab active">
+    <section class="block">
+      <h2>Pile</h2>
+      <div class="row" id="pile-row"></div>
+    </section>
+
+    <section class="block">
+      <h2>Soil layers — left</h2>
+      <div class="layer-list" id="left-layers"></div>
+      <button class="add-btn" id="add-left">+ add layer</button>
+    </section>
+
+    <section class="block">
+      <h2>Soil layers — right</h2>
+      <div class="layer-list" id="right-layers"></div>
+      <button class="add-btn" id="add-right">+ add layer</button>
+    </section>
+
+    <section class="block">
+      <h2>Supports</h2>
+      <div class="support-list" id="support-list"></div>
+      <button class="add-btn" id="add-support">+ add support</button>
+    </section>
+
+    <button class="primary-btn" id="goto-interact">Save &amp; go to Interact →</button>
+  </main>
+
+  <main id="tab-interact" class="tab">
+    <div id="interact-empty" class="empty-state" hidden>
+      No supports defined yet. Add one on the
+      <a href="#" id="empty-to-input">Input tab</a>.
+    </div>
+    <div id="interact-body" class="interact-grid">
+      <div class="panel">
+        <h3>Pile cross-section</h3>
+        <svg id="cross-section" viewBox="0 0 360 480"></svg>
+        <div class="legend">
+          <span class="swatch left"></span> left soil
+          <span class="swatch right"></span> right soil
+          <span class="hint">drag a support handle (●) up or down</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Shear force V(z)</h3>
+        <svg id="chart-V" viewBox="0 0 320 480"></svg>
+      </div>
+      <div class="panel">
+        <h3>Bending moment M(z)</h3>
+        <svg id="chart-M" viewBox="0 0 320 480"></svg>
+      </div>
+    </div>
+    <div class="status" id="status">not solved yet</div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
