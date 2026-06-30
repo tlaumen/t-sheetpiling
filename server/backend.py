@@ -2,22 +2,43 @@
 Local backend for the sheet pile solver demo.
 
 Serves the static frontend (web/index.html, app.js, style.css) and a
-single POST /solve endpoint that calls the C solver, compiled as
-bin/libsheetpile.so, in-process via ctypes (no subprocess spawn).
+single POST /solve endpoint that calls the C solver, compiled into
+bin/libsheetpile.{so,dylib,dll}, in-process via ctypes (no subprocess
+spawn).
 
-Run with:  python3 backend.py
+Run with:  python3 server/backend.py
 Then open: http://127.0.0.1:8765/
 """
 import ctypes
 import json
 import os
+import platform
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LIB_PATH = os.path.join(HERE, "libsheetpile.so")
-STATIC_DIR = os.path.join(os.path.dirname(HERE), "web")
+PROJECT_ROOT = os.path.dirname(HERE)
+BIN_DIR = os.path.join(PROJECT_ROOT, "bin")
+STATIC_DIR = os.path.join(PROJECT_ROOT, "web")
 
-lib = ctypes.CDLL(LIB_PATH)
+
+def find_library():
+    """Picks whichever shared library is present in bin/, in an order
+    that matches the current platform's native extension first."""
+    candidates = {
+        "Windows": ["libsheetpile.dll"],
+        "Darwin": ["libsheetpile.dylib", "libsheetpile.so"],
+    }.get(platform.system(), ["libsheetpile.so"])
+    for name in candidates:
+        path = os.path.join(BIN_DIR, name)
+        if os.path.isfile(path):
+            return path
+    raise FileNotFoundError(
+        "No shared library found in bin/. Run `make lib` (or the "
+        "equivalent manual gcc/cl.exe command in the README) first."
+    )
+
+
+lib = ctypes.CDLL(find_library())
 
 D = ctypes.c_double
 DP = ctypes.POINTER(ctypes.c_double)
